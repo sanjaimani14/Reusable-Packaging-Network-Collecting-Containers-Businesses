@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./
+      dockerfile: repackai/backend/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PROJECT_NAME=RePackAI
+      - DATABASE_URL=sqlite:///./repackai.db
+      - WEIGHT_FINANCIAL=0.40
+      - WEIGHT_ENVIRONMENTAL=0.30
+      - WEIGHT_REUSABILITY=0.20
+      - WEIGHT_OPERATIONAL=0.10
+    volumes:
+      - repack_data:/workspace
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: always
+
+volumes:
+  repack_data:

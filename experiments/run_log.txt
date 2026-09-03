@@ -1,0 +1,20 @@
+Timestamp: 2026-08-24 08:07:35.025205
+Dataset Rows: 5500
+Test Accuracy: 0.9773
+Parameters: n_estimators=100, max_depth=12
+Classification Report:
+               precision    recall  f1-score   support
+
+      Dispose       0.95      0.87      0.91        47
+Manual_Review       0.94      0.68      0.79        25
+      Recycle       0.95      0.97      0.96       118
+    Refurbish       0.00      0.00      0.00         4
+       Repair       0.00      0.00      0.00         2
+       Resell       0.98      1.00      0.99       904
+
+     accuracy                           0.98      1100
+    macro avg       0.64      0.59      0.61      1100
+ weighted avg       0.97      0.98      0.97      1100
+
+==================================================
+
