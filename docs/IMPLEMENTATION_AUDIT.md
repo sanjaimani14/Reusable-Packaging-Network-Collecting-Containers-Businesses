@@ -84,7 +84,7 @@ The goal of RePackAI is to transform the operational pain of managing returned r
 
 ## 5. Verification Test Results
 
-- **Backend Pytest Suite**: 28 tests passing (`pytest repackai/backend/tests/test_repack.py`)
+- **Backend Pytest Suite**: 28 tests passing (`pytest backend/tests/test_repack.py`)
 - **End-to-End Workflow**: 13/13 stages verified (`python scripts/verify_workflow.py`) -> `FINAL STATUS: PASS`
 - **Frontend Build**: Vite + TypeScript compiled cleanly into `dist/` in 25.8s
 - **Telemetry Latency**: Average response time ~320ms, P95 ~495ms across 100 consecutive requests

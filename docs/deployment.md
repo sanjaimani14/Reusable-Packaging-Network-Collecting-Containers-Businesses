@@ -6,7 +6,7 @@ This document provides setup instructions for deploying RePackAI in local develo
 
 Copy `.env.example` to `.env` and configure key variables:
 ```bash
-cp repackai/.env.example repackai/backend/.env
+cp .env.example .env
 ```
 
 Key Settings:
@@ -21,18 +21,18 @@ RePackAI features a production-style container architecture. Ensure Docker and D
 
 ```bash
 # Build and start services in detached background mode
-docker-compose up --build -d
+docker compose up --build -d
 ```
 
 This single command:
-1.  Downloads base images (python:3.11-slim and node:18-alpine).
+1.  Downloads base images (`python:3.11-slim` and `node:18-alpine`).
 2.  Spawns `backend` container running Uvicorn at `http://localhost:8000`.
 3.  Spawns `frontend` container compiling assets and running Nginx static hosting at `http://localhost:3000`.
 4.  Creates the persistent database volume.
 
 To stop services:
 ```bash
-docker-compose down
+docker compose down
 ```
 
 ---
@@ -40,28 +40,27 @@ docker-compose down
 ## 3. Manual Server Deployment
 
 ### Backend Deployment
-Ensure Python 3.11+ is installed, then run:
+Ensure Python 3.11+ is installed, then run from repository root:
 ```bash
-cd repackai/backend
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
 
 # Run migrations & seed Rules
-python ../scripts/seed_database.py
+python scripts/seed_database.py
 
 # Run training
-python ../scripts/train_model.py
+python scripts/train_model.py
 
 # Launch production ASGI server
-uvicorn app.main:app --host 0.0.0.0 --port 8000
+uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
 ```
 
 ### Frontend Deployment
 Ensure Node.js 18+ is installed, then run:
 ```bash
-cd repackai/frontend
+cd frontend
 npm install
 
 # Build static production bundle
 npm run build
 ```
-The compiled HTML/JS/CSS assets will be written to `repackai/frontend/dist`. Deploy this directory to Nginx, AWS S3, or any static file host.
+The compiled HTML/JS/CSS assets will be written to `frontend/dist`. Deploy this directory to Nginx, AWS S3, or any static file host.

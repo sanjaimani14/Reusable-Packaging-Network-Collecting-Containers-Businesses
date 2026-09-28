@@ -155,7 +155,7 @@ Combines:
 
 ## 8. Mathematical Formulation
 
-Complete mathematical derivation is documented in [`docs/mathematical_formulation.md`](file:///g:/project/coe%20project/repackai/docs/mathematical_formulation.md).
+Complete mathematical derivation is documented in [`docs/mathematical_formulation.md`](docs/mathematical_formulation.md).
 
 ### Multi-Criteria Utility Equation:
 $$Score(d) = w_{fin} \cdot V(d) + w_{env} \cdot E(d) + w_{re} \cdot R(d) + w_{op} \cdot O(d)$$
@@ -220,7 +220,7 @@ cp .env.example .env
 ### Step 2: Backend Setup
 ```bash
 # Install dependencies
-pip install -r repackai/backend/requirements.txt
+pip install -r backend/requirements.txt
 
 # Generate synthetic dataset (seed=42)
 python scripts/generate_dataset.py --rows 5000 --seed 42
@@ -232,16 +232,16 @@ python scripts/baseline_heuristic.py
 python scripts/run_experiments.py
 
 # Run telemetry latency benchmark
-python repackai/experiments/performance_benchmark.py
+python experiments/performance_benchmark.py
 
 # Launch FastAPI server
-uvicorn repackai.backend.app.main:app --host 0.0.0.0 --port 8000 --reload
+uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 *API Swagger Documentation*: `http://localhost:8000/docs`
 
 ### Step 3: Frontend Setup
 ```bash
-cd repackai/frontend
+cd frontend
 npm install
 npm run dev
 ```
@@ -253,7 +253,7 @@ npm run dev
 
 ### Run Comprehensive Pytest Suite (28 Tests)
 ```bash
-pytest repackai/backend/tests/test_repack.py
+pytest backend/tests/test_repack.py
 ```
 
 ### One-Command End-to-End Verification
@@ -327,12 +327,12 @@ Follow this demonstration order to evaluate the operational prototype:
 
 ## 16. Technical Documentation Index
 
-- [Implementation Audit & Gap Analysis](file:///g:/project/coe%20project/repackai/docs/IMPLEMENTATION_AUDIT.md)
-- [Review 2 Completion Matrix](file:///g:/project/coe%20project/repackai/docs/REVIEW_2_COMPLETION_MATRIX.md)
-- [Mathematical Formulation](file:///g:/project/coe%20project/repackai/docs/mathematical_formulation.md)
-- [Recommender Pseudocode](file:///g:/project/coe%20project/repackai/docs/recommender_pseudocode.md)
-- [Error Analysis & Empirical Findings](file:///g:/project/coe%20project/repackai/docs/error_analysis.md)
-- [Stakeholder Validation Protocol](file:///g:/project/coe%20project/repackai/docs/user_validation.md)
-- [REST API Specification](file:///g:/project/coe%20project/repackai/docs/api.md)
-- [System Architecture](file:///g:/project/coe%20project/repackai/docs/architecture.md)
-- [Database Schema](file:///g:/project/coe%20project/repackai/docs/database.md)
+- [Implementation Audit & Gap Analysis](docs/IMPLEMENTATION_AUDIT.md)
+- [Review 2 Completion Matrix](docs/REVIEW_2_COMPLETION_MATRIX.md)
+- [Mathematical Formulation](docs/mathematical_formulation.md)
+- [Recommender Pseudocode](docs/recommender_pseudocode.md)
+- [Error Analysis & Empirical Findings](docs/error_analysis.md)
+- [Stakeholder Validation Protocol](docs/user_validation.md)
+- [REST API Specification](docs/api.md)
+- [System Architecture](docs/architecture.md)
+- [Database Schema](docs/database.md)

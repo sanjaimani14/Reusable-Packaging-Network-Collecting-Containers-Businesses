@@ -6,10 +6,19 @@ import numpy as np
 from fastapi.testclient import TestClient
 
 # Add parent path to import app modules
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+current_dir = os.path.dirname(os.path.abspath(__file__))
+repo_root = os.path.abspath(os.path.join(current_dir, ".."))
+workspace_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
+for p in [repo_root, workspace_root]:
+    if p not in sys.path:
+        sys.path.insert(0, p)
 
-from repackai.backend.app.main import app
-from repackai.backend.app.database import get_db
+try:
+    from backend.app.main import app
+    from backend.app.database import get_db
+except ImportError:
+    from repackai.backend.app.main import app
+    from repackai.backend.app.database import get_db
 
 client = TestClient(app)
 

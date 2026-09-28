@@ -4,18 +4,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 try:
-    from repackai.backend.app.config import settings
-    from repackai.backend.app.database import engine, Base, get_db
-    from repackai.backend.app.api import routes
+    from backend.app.config import settings
+    from backend.app.database import engine, Base, get_db
+    from backend.app.api import routes
 except ImportError:
     try:
-        from backend.app.config import settings
-        from backend.app.database import engine, Base, get_db
-        from backend.app.api import routes
-    except ImportError:
         from app.config import settings
         from app.database import engine, Base, get_db
         from app.api import routes
+    except ImportError:
+        from repackai.backend.app.config import settings
+        from repackai.backend.app.database import engine, Base, get_db
+        from repackai.backend.app.api import routes
 
 # Initialize database tables
 Base.metadata.create_all(bind=engine)

@@ -41,12 +41,13 @@ This document summarizes the metrics, business impacts, safety checks, and fairn
 
 ## 4. Evaluation Visualizations
 
-The generated evaluation charts are saved under [docs/figures/](file:///g:/project/coe%20project/repackai/docs/figures/):
-1.  [confusion_matrix.png](file:///g:/project/coe%20project/repackai/docs/figures/confusion_matrix.png) — Classification boundaries.
-2.  [value_recovered_comparison.png](file:///g:/project/coe%20project/repackai/docs/figures/value_recovered_comparison.png) — Financial recovery comparison.
-3.  [waste_avoided_comparison.png](file:///g:/project/coe%20project/repackai/docs/figures/waste_avoided_comparison.png) — Landfill diversion metrics.
-4.  [carbon_avoided_comparison.png](file:///g:/project/coe%20project/repackai/docs/figures/carbon_avoided_comparison.png) — Net carbon offset comparisons.
-5.  [disposition_distribution.png](file:///g:/project/coe%20project/repackai/docs/figures/disposition_distribution.png) — Final choices count.
-6.  [recommendation_confidence.png](file:///g:/project/coe%20project/repackai/docs/figures/recommendation_confidence.png) — ML probability distributions.
-7.  [override_rate.png](file:///g:/project/coe%20project/repackai/docs/figures/override_rate.png) — Proportion of operator interventions.
-8.  [error_categories.png](file:///g:/project/coe%20project/repackai/docs/figures/error_categories.png) — Taxonomy of classification mistakes.
+The generated evaluation charts are saved under [`docs/figures/`](figures/):
+1.  [`confusion_matrix.png`](figures/confusion_matrix.png) — Classification boundaries between true and predicted dispositions.
+2.  [`value_recovered_comparison.png`](figures/value_recovered_comparison.png) — Financial recovery comparison (INR).
+3.  [`waste_avoided_comparison.png`](figures/waste_avoided_comparison.png) — Physical landfill diversion metrics (kg).
+4.  [`carbon_avoided_comparison.png`](figures/carbon_avoided_comparison.png) — Net carbon offset comparisons (kg CO2e).
+5.  [`disposition_distribution.png`](figures/disposition_distribution.png) — Distribution of recommended actions.
+6.  [`recommendation_confidence.png`](figures/recommendation_confidence.png) — Confidence score histogram across test set.
+7.  [`human_review_rate.png`](figures/human_review_rate.png) — **Actual Measured Result**: Proportion of containers requiring human confirmation escalation vs cleared for autonomous disposition.
+8.  [`override_rate.png`](figures/override_rate.png) — **Illustrative simulated example — not an experimentally measured result**: Example stakeholder override distribution (92% approve / 8% override) for operational UI demonstrations.
+9.  [`error_categories.png`](figures/error_categories.png) — Taxonomy of misclassification errors.

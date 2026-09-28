@@ -1,7 +1,13 @@
 import json
 from sqlalchemy.orm import Session
 from typing import Dict, Any, Optional
-from repackai.backend.app.models.domain import AuditLog
+try:
+    from backend.app.models.domain import AuditLog
+except ImportError:
+    try:
+        from app.models.domain import AuditLog
+    except ImportError:
+        from repackai.backend.app.models.domain import AuditLog
 
 class AuditService:
     @staticmethod

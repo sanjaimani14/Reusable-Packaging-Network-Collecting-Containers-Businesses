@@ -6,27 +6,17 @@ from sqlalchemy.orm import Session
 from typing import List, Dict, Any
 
 try:
-    from repackai.backend.app.database import get_db
-    from repackai.backend.app.models import domain
-    from repackai.backend.app.schemas import api_schemas
-    from repackai.backend.app.recommender_rules.engine import RuleEngine
-    from repackai.backend.app.services.recommender import RecommendationEngine
-    from repackai.backend.app.services.audit_service import AuditService
-    from repackai.backend.app.services.sync_service import SyncService
-    from repackai.backend.app.offline_cache.cache_manager import OfflineCacheManager
-    from repackai.backend.app.ingestion.validator import IngestionValidator
+    from backend.app.database import get_db
+    from backend.app.models import domain
+    from backend.app.schemas import api_schemas
+    from backend.app.recommender_rules.engine import RuleEngine
+    from backend.app.services.recommender import RecommendationEngine
+    from backend.app.services.audit_service import AuditService
+    from backend.app.services.sync_service import SyncService
+    from backend.app.offline_cache.cache_manager import OfflineCacheManager
+    from backend.app.ingestion.validator import IngestionValidator
 except ImportError:
     try:
-        from backend.app.database import get_db
-        from backend.app.models import domain
-        from backend.app.schemas import api_schemas
-        from backend.app.recommender_rules.engine import RuleEngine
-        from backend.app.services.recommender import RecommendationEngine
-        from backend.app.services.audit_service import AuditService
-        from backend.app.services.sync_service import SyncService
-        from backend.app.offline_cache.cache_manager import OfflineCacheManager
-        from backend.app.ingestion.validator import IngestionValidator
-    except ImportError:
         from app.database import get_db
         from app.models import domain
         from app.schemas import api_schemas
@@ -36,6 +26,16 @@ except ImportError:
         from app.services.sync_service import SyncService
         from app.offline_cache.cache_manager import OfflineCacheManager
         from app.ingestion.validator import IngestionValidator
+    except ImportError:
+        from repackai.backend.app.database import get_db
+        from repackai.backend.app.models import domain
+        from repackai.backend.app.schemas import api_schemas
+        from repackai.backend.app.recommender_rules.engine import RuleEngine
+        from repackai.backend.app.services.recommender import RecommendationEngine
+        from repackai.backend.app.services.audit_service import AuditService
+        from repackai.backend.app.services.sync_service import SyncService
+        from repackai.backend.app.offline_cache.cache_manager import OfflineCacheManager
+        from repackai.backend.app.ingestion.validator import IngestionValidator
 
 router = APIRouter()
 

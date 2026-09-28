@@ -14,18 +14,6 @@ for p in [root_dir, repack_dir]:
         sys.path.insert(0, p)
 
 try:
-    from repackai.backend.app.database import Base
-    from repackai.backend.app.models import domain
-    from repackai.backend.app.ingestion.validator import IngestionValidator
-    from repackai.backend.app.recommender_rules.engine import RuleEngine
-    from repackai.backend.app.calculations.financial import FinancialCalculator
-    from repackai.backend.app.calculations.environmental import EnvironmentalCalculator
-    from repackai.backend.app.services.recommender import RecommendationEngine
-    from repackai.backend.app.offline_cache.cache_manager import OfflineCacheManager
-    from repackai.backend.app.evaluation.metrics import EvaluationMetrics
-    from repackai.scripts.generate_dataset import generate_synthetic_data
-    from repackai.scripts.baseline_heuristic import run_baseline_heuristic
-except ImportError:
     from backend.app.database import Base
     from backend.app.models import domain
     from backend.app.ingestion.validator import IngestionValidator
@@ -37,6 +25,18 @@ except ImportError:
     from backend.app.evaluation.metrics import EvaluationMetrics
     from scripts.generate_dataset import generate_synthetic_data
     from scripts.baseline_heuristic import run_baseline_heuristic
+except ImportError:
+    from repackai.backend.app.database import Base
+    from repackai.backend.app.models import domain
+    from repackai.backend.app.ingestion.validator import IngestionValidator
+    from repackai.backend.app.recommender_rules.engine import RuleEngine
+    from repackai.backend.app.calculations.financial import FinancialCalculator
+    from repackai.backend.app.calculations.environmental import EnvironmentalCalculator
+    from repackai.backend.app.services.recommender import RecommendationEngine
+    from repackai.backend.app.offline_cache.cache_manager import OfflineCacheManager
+    from repackai.backend.app.evaluation.metrics import EvaluationMetrics
+    from repackai.scripts.generate_dataset import generate_synthetic_data
+    from repackai.scripts.baseline_heuristic import run_baseline_heuristic
 
 def run_end_to_end_verification():
     print("=====================================")

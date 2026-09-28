@@ -1,23 +1,23 @@
 from typing import Dict, Any, List
 try:
-    from repackai.backend.app.config import settings
-    from repackai.backend.app.recommender_rules.engine import RuleEngine, RuleResult
-    from repackai.backend.app.calculations.financial import FinancialCalculator
-    from repackai.backend.app.calculations.environmental import EnvironmentalCalculator
-    from repackai.backend.app.services.ml_service import MLService
+    from backend.app.config import settings
+    from backend.app.recommender_rules.engine import RuleEngine, RuleResult
+    from backend.app.calculations.financial import FinancialCalculator
+    from backend.app.calculations.environmental import EnvironmentalCalculator
+    from backend.app.services.ml_service import MLService
 except ImportError:
     try:
-        from backend.app.config import settings
-        from backend.app.recommender_rules.engine import RuleEngine, RuleResult
-        from backend.app.calculations.financial import FinancialCalculator
-        from backend.app.calculations.environmental import EnvironmentalCalculator
-        from backend.app.services.ml_service import MLService
-    except ImportError:
         from app.config import settings
         from app.recommender_rules.engine import RuleEngine, RuleResult
         from app.calculations.financial import FinancialCalculator
         from app.calculations.environmental import EnvironmentalCalculator
         from app.services.ml_service import MLService
+    except ImportError:
+        from repackai.backend.app.config import settings
+        from repackai.backend.app.recommender_rules.engine import RuleEngine, RuleResult
+        from repackai.backend.app.calculations.financial import FinancialCalculator
+        from repackai.backend.app.calculations.environmental import EnvironmentalCalculator
+        from repackai.backend.app.services.ml_service import MLService
 
 class RecommendationEngine:
     """

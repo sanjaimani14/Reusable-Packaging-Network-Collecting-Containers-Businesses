@@ -13,6 +13,6 @@ Deterministic business rules are executed at the start of the recommendation pro
 
 ## Custom Rule Customization
 
-Rules are implemented as pure Python code in the [RuleEngine](file:///g:/project/coe%20project/repackai/backend/app/rules/engine.py) helper, ensuring they can be unit-tested without database overhead.
+Rules are implemented as pure Python code in the [RuleEngine](../backend/app/recommender_rules/engine.py) helper, ensuring they can be unit-tested without database overhead.
 
 Any action marked as prohibited will have its composite recommendation score set to $-1.0$.

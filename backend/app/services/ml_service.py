@@ -3,7 +3,13 @@ import joblib
 import pandas as pd
 import numpy as np
 from typing import Dict, Any, Tuple
-from repackai.backend.app.config import settings
+try:
+    from backend.app.config import settings
+except ImportError:
+    try:
+        from app.config import settings
+    except ImportError:
+        from repackai.backend.app.config import settings
 
 class MLService:
     _model = None

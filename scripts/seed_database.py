@@ -2,11 +2,20 @@ import sys
 import os
 from sqlalchemy.orm import Session
 
-# Add the parent folder to path to import repackai modules
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+# Add parent path to import app modules
+current_dir = os.path.dirname(os.path.abspath(__file__))
+repo_root = os.path.abspath(os.path.join(current_dir, ".."))
+workspace_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
+for p in [repo_root, workspace_root]:
+    if p not in sys.path:
+        sys.path.insert(0, p)
 
-from repackai.backend.app.database import engine, Base, SessionLocal
-from repackai.backend.app.models import domain
+try:
+    from backend.app.database import engine, Base, SessionLocal
+    from backend.app.models import domain
+except ImportError:
+    from repackai.backend.app.database import engine, Base, SessionLocal
+    from repackai.backend.app.models import domain
 import hashlib
 
 def hash_password(password: str) -> str:

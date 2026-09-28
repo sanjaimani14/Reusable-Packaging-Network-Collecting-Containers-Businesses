@@ -7,20 +7,13 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+# Setup sys.path for repo root
+current_dir = os.path.dirname(os.path.abspath(__file__))
+repo_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
+if repo_root not in sys.path:
+    sys.path.insert(0, repo_root)
+
 try:
-    from repackai.backend.app.main import app
-    from repackai.backend.app.database import Base, get_db
-    from repackai.backend.app.models import domain
-    from repackai.backend.app.recommender_rules.engine import RuleEngine
-    from repackai.backend.app.calculations.financial import FinancialCalculator
-    from repackai.backend.app.calculations.environmental import EnvironmentalCalculator
-    from repackai.backend.app.services.recommender import RecommendationEngine
-    from repackai.backend.app.services.ml_service import MLService
-    from repackai.backend.app.ingestion.validator import IngestionValidator
-    from repackai.backend.app.offline_cache.cache_manager import OfflineCacheManager
-    from repackai.scripts.baseline_heuristic import run_baseline_heuristic
-    from repackai.scripts.generate_dataset import generate_synthetic_data
-except ImportError:
     from backend.app.main import app
     from backend.app.database import Base, get_db
     from backend.app.models import domain
@@ -33,6 +26,19 @@ except ImportError:
     from backend.app.offline_cache.cache_manager import OfflineCacheManager
     from scripts.baseline_heuristic import run_baseline_heuristic
     from scripts.generate_dataset import generate_synthetic_data
+except ImportError:
+    from repackai.backend.app.main import app
+    from repackai.backend.app.database import Base, get_db
+    from repackai.backend.app.models import domain
+    from repackai.backend.app.recommender_rules.engine import RuleEngine
+    from repackai.backend.app.calculations.financial import FinancialCalculator
+    from repackai.backend.app.calculations.environmental import EnvironmentalCalculator
+    from repackai.backend.app.services.recommender import RecommendationEngine
+    from repackai.backend.app.services.ml_service import MLService
+    from repackai.backend.app.ingestion.validator import IngestionValidator
+    from repackai.backend.app.offline_cache.cache_manager import OfflineCacheManager
+    from repackai.scripts.baseline_heuristic import run_baseline_heuristic
+    from repackai.scripts.generate_dataset import generate_synthetic_data
 
 # Setup separate test database
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test_repack.db"

@@ -1,7 +1,13 @@
 import json
 from sqlalchemy.orm import Session
 from typing import Dict, Any, List
-from repackai.backend.app.models.domain import SyncQueue, Container, Inspection
+try:
+    from backend.app.models.domain import SyncQueue, Container, Inspection
+except ImportError:
+    try:
+        from app.models.domain import SyncQueue, Container, Inspection
+    except ImportError:
+        from repackai.backend.app.models.domain import SyncQueue, Container, Inspection
 
 class SyncService:
     @staticmethod

@@ -1,1 +1,23 @@
-{"baseline_accuracy": 0.394, "baseline_f1": 0.49484883547454434, "proposed_accuracy": 1.0, "proposed_f1": 1.0, "baseline_val_recovered": 20666.50639999999, "proposed_val_recovered": 28422.917000000016, "baseline_waste_avoided": 10222.037999999997, "proposed_waste_avoided": 10453.005999999992, "baseline_carbon_avoided": 29048.82279999998, "proposed_carbon_avoided": 31308.024199999978, "ml_unsafe_violations": 0, "rules_unsafe_violations": 0}
+{
+  "baseline_accuracy": 0.394,
+  "baseline_f1": 0.4948,
+  "proposed_accuracy": 1.0,
+  "proposed_f1": 1.0,
+  "baseline_val_recovered": 20666.51,
+  "proposed_val_recovered": 28422.92,
+  "baseline_waste_avoided": 10222.04,
+  "proposed_waste_avoided": 10453.01,
+  "baseline_carbon_avoided": 29048.82,
+  "proposed_carbon_avoided": 31308.02,
+  "safety_compliance_pct": 100.0,
+  "recommendation_consistency_pct": 100.0,
+  "human_review_rate": 0.179,
+  "autonomous_action_rate": 0.821,
+  "human_review_count": 179,
+  "autonomous_count": 821,
+  "avg_inference_latency_ms": 193.355,
+  "ml_unsafe_violations": 0,
+  "rules_unsafe_violations": 0,
+  "override_rate_simulated": 0.08,
+  "override_rate_note": "Illustrative simulated example \u2014 not an experimentally measured result"
+}

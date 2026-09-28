@@ -3,12 +3,12 @@ from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Foreig
 from sqlalchemy.orm import relationship
 
 try:
-    from repackai.backend.app.database import Base
+    from backend.app.database import Base
 except ImportError:
     try:
-        from backend.app.database import Base
-    except ImportError:
         from app.database import Base
+    except ImportError:
+        from repackai.backend.app.database import Base
 
 def utcnow():
     return datetime.datetime.now(datetime.timezone.utc)
