@@ -1,7 +1,13 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from repackai.backend.app.config import settings
+from sqlalchemy.orm import declarative_base, sessionmaker
+
+try:
+    from repackai.backend.app.config import settings
+except ImportError:
+    try:
+        from backend.app.config import settings
+    except ImportError:
+        from app.config import settings
 
 # For SQLite, we set check_same_thread=False
 connect_args = {}

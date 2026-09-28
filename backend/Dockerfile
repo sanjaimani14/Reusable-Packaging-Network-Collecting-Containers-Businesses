@@ -8,19 +8,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the requirements file and install
-COPY repackai/backend/requirements.txt /workspace/repackai/backend/requirements.txt
-RUN pip install --no-cache-dir -r /workspace/repackai/backend/requirements.txt
+COPY backend/requirements.txt /workspace/requirements.txt
+RUN pip install --no-cache-dir -r /workspace/requirements.txt
 
-# Copy the rest of the application
-COPY repackai/ /workspace/repackai/
+# Copy application source
+COPY . /workspace/
 
-# Expose port
+# Expose backend API port
 EXPOSE 8000
 
 # Set Python Path
 ENV PYTHONPATH=/workspace
 
-# Set working directory to project root or scripts folder to run seed if needed
-WORKDIR /workspace
-
-CMD ["uvicorn", "repackai.backend.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000"]

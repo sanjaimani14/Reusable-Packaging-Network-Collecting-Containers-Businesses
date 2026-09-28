@@ -1,7 +1,17 @@
 import datetime
 from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey, Text
 from sqlalchemy.orm import relationship
-from repackai.backend.app.database import Base
+
+try:
+    from repackai.backend.app.database import Base
+except ImportError:
+    try:
+        from backend.app.database import Base
+    except ImportError:
+        from app.database import Base
+
+def utcnow():
+    return datetime.datetime.now(datetime.timezone.utc)
 
 class User(Base):
     __tablename__ = "users"
@@ -11,7 +21,7 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     role = Column(String, default="operator")  # admin, operator, inspector
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
 
     # Relationships
     audit_logs = relationship("AuditLog", back_populates="user")
@@ -27,7 +37,7 @@ class Container(Base):
     usage_count = Column(Integer, nullable=False)
     recyclable = Column(Boolean, default=True)
     status = Column(String, default="synced")  # synced, pending_sync
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
     
     # Relationships
     inspections = relationship("Inspection", back_populates="container", cascade="all, delete-orphan")
@@ -40,7 +50,7 @@ class Inspection(Base):
     id = Column(Integer, primary_key=True, index=True)
     container_id = Column(String, ForeignKey("containers.id"), nullable=False)
     inspector_id = Column(Integer, ForeignKey("users.id"), nullable=True)
-    inspection_date = Column(DateTime, default=datetime.datetime.utcnow)
+    inspection_date = Column(DateTime, default=utcnow)
     damage_level = Column(String, nullable=True)  # None, Low, Medium, High, Critical
     structural_condition = Column(String, nullable=True)  # Safe, Minor Damage, Moderate Damage, Unsafe
     cleanliness_score = Column(Float, nullable=True)
@@ -52,7 +62,7 @@ class Inspection(Base):
     location = Column(String, nullable=True)
     inspection_completeness = Column(Float, default=1.0)
     raw_data_json = Column(Text, nullable=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
     
     # Relationships
     container = relationship("Container", back_populates="inspections")
@@ -77,7 +87,7 @@ class Recommendation(Base):
     reviewer_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     override_reason = Column(Text, nullable=True)
     review_date = Column(DateTime, nullable=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
     
     # Relationships
     container = relationship("Container", back_populates="recommendations")
@@ -91,7 +101,7 @@ class Disposition(Base):
     container_id = Column(String, ForeignKey("containers.id"), nullable=False)
     recommendation_id = Column(Integer, ForeignKey("recommendations.id"), nullable=False)
     actual_action = Column(String, nullable=False)  # REPAIR, REFURBISH, RESELL, RECYCLE, DISPOSE
-    processed_at = Column(DateTime, default=datetime.datetime.utcnow)
+    processed_at = Column(DateTime, default=utcnow)
     operator_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     notes = Column(Text, nullable=True)
     actual_cost = Column(Float, default=0.0)
@@ -133,7 +143,7 @@ class AuditLog(Base):
     old_value_json = Column(Text, nullable=True)
     new_value_json = Column(Text, nullable=True)
     ip_address = Column(String, nullable=True)
-    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+    timestamp = Column(DateTime, default=utcnow)
     
     # Relationships
     user = relationship("User", back_populates="audit_logs")
@@ -148,8 +158,8 @@ class SyncQueue(Base):
     status = Column(String, default="PENDING")  # PENDING, SYNCED, FAILED
     retry_count = Column(Integer, default=0)
     error_message = Column(Text, nullable=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
+    updated_at = Column(DateTime, default=utcnow, onupdate=utcnow)
 
 class Experiment(Base):
     __tablename__ = "experiments"
@@ -159,5 +169,5 @@ class Experiment(Base):
     model_version = Column(String, nullable=False)
     parameters_json = Column(Text, nullable=True)
     metrics_json = Column(Text, nullable=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
     created_by = Column(Integer, ForeignKey("users.id"), nullable=True)

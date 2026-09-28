@@ -1,5 +1,5 @@
 import datetime
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from typing import List, Optional, Dict, Any
 
 # Token schemas
@@ -21,11 +21,10 @@ class UserCreate(UserBase):
     password: str
 
 class UserResponse(UserBase):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     created_at: datetime.datetime
-    
-    class Config:
-        from_attributes = True
 
 class UserLogin(BaseModel):
     username: str
@@ -37,19 +36,18 @@ class ContainerBase(BaseModel):
     container_type: str = Field(..., description="Box, Pallet, Crate, Drum, Tote")
     material: str = Field(..., description="Cardboard, Wood, Plastic, Metal")
     weight_kg: float
-    age_months: int
-    usage_count: int
+    age_months: int = 1
+    usage_count: int = 1
     recyclable: bool = True
 
 class ContainerCreate(ContainerBase):
     pass
 
 class ContainerResponse(ContainerBase):
+    model_config = ConfigDict(from_attributes=True)
+    
     status: str
     created_at: datetime.datetime
-    
-    class Config:
-        from_attributes = True
 
 # Inspection schemas
 class InspectionBase(BaseModel):
@@ -70,16 +68,17 @@ class InspectionCreate(InspectionBase):
     pass
 
 class InspectionResponse(InspectionBase):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     inspector_id: Optional[int] = None
     inspection_date: datetime.datetime
     created_at: datetime.datetime
-    
-    class Config:
-        from_attributes = True
 
 # Recommendation schemas
 class RecommendationResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     container_id: str
     inspection_id: int
@@ -106,9 +105,6 @@ class RecommendationResponse(BaseModel):
     requires_human_confirmation: bool = False
     alternative_actions: Optional[List[Dict[str, Any]]] = None
 
-    class Config:
-        from_attributes = True
-
 class RecommendationApprove(BaseModel):
     reviewer_id: Optional[int] = None
 
@@ -119,6 +115,8 @@ class RecommendationOverride(BaseModel):
 
 # Rule schemas
 class RuleResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     rule_name: str
     is_triggered: bool
     severity: str
@@ -127,6 +125,8 @@ class RuleResponse(BaseModel):
 
 # Audit Log schemas
 class AuditLogResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     user_id: Optional[int] = None
     action: str
@@ -136,9 +136,6 @@ class AuditLogResponse(BaseModel):
     new_value_json: Optional[str] = None
     ip_address: Optional[str] = None
     timestamp: datetime.datetime
-    
-    class Config:
-        from_attributes = True
 
 # Analytics schemas
 class AnalyticsResponse(BaseModel):

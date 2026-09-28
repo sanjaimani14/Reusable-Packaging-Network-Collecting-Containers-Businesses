@@ -1,0 +1,20 @@
+{
+  "model_name": "Baseline Heuristic",
+  "total_containers_evaluated": 5000,
+  "disposition_distribution": {
+    "RESELL": 1180,
+    "REPAIR": 2592,
+    "REFURBISH": 44,
+    "RECYCLE": 792,
+    "DISPOSE": 257,
+    "MANUAL_REVIEW": 135
+  },
+  "value_recovered": 116776.34,
+  "waste_avoided_kg": 51331.95,
+  "carbon_avoided_kg": 140882.0,
+  "safety_violations": 0,
+  "safety_compliance": 1.0,
+  "human_review_rate": 0.027,
+  "average_value_per_container": 23.36,
+  "average_waste_diverted_per_container_kg": 10.27
+}

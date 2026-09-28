@@ -1,31 +1,51 @@
 from typing import Dict, Any, List
-from repackai.backend.app.config import settings
-from repackai.backend.app.rules.engine import RuleEngine, RuleResult
-from repackai.backend.app.calculations.financial import FinancialCalculator
-from repackai.backend.app.calculations.environmental import EnvironmentalCalculator
-from repackai.backend.app.services.ml_service import MLService
+try:
+    from repackai.backend.app.config import settings
+    from repackai.backend.app.recommender_rules.engine import RuleEngine, RuleResult
+    from repackai.backend.app.calculations.financial import FinancialCalculator
+    from repackai.backend.app.calculations.environmental import EnvironmentalCalculator
+    from repackai.backend.app.services.ml_service import MLService
+except ImportError:
+    try:
+        from backend.app.config import settings
+        from backend.app.recommender_rules.engine import RuleEngine, RuleResult
+        from backend.app.calculations.financial import FinancialCalculator
+        from backend.app.calculations.environmental import EnvironmentalCalculator
+        from backend.app.services.ml_service import MLService
+    except ImportError:
+        from app.config import settings
+        from app.recommender_rules.engine import RuleEngine, RuleResult
+        from app.calculations.financial import FinancialCalculator
+        from app.calculations.environmental import EnvironmentalCalculator
+        from app.services.ml_service import MLService
 
 class RecommendationEngine:
+    """
+    Multi-Criteria Decision Analysis (MCDA) Recommendation Engine.
+    Combines deterministic safety hard-gates, Net Recovery Value (NRV),
+    lifecycle carbon avoided, material waste diverted, and operational feasibility.
+    """
+    
     @staticmethod
     def generate_recommendation(
         container_data: Dict[str, Any],
         inspection_data: Dict[str, Any],
         material_rules: Dict[str, Any] = None
     ) -> Dict[str, Any]:
-        # 1. Evaluate Rule Engine
+        # 1. HARD GATE: Evaluate Rule Engine
         rule_results = RuleEngine.evaluate(inspection_data, container_data)
         prohibited_actions = RuleEngine.get_prohibited_actions(rule_results)
         
-        # 2. Financial Calculations
+        # 2. Financial Calculations (NRV)
         financials = FinancialCalculator.calculate(container_data, inspection_data, material_rules)
         
-        # 3. Environmental Calculations
+        # 3. Environmental Calculations (Carbon Avoided & Waste Diverted)
         environmentals = EnvironmentalCalculator.calculate(container_data, inspection_data, material_rules)
         
-        # 4. Normalize and calculate scores
+        # 4. Multi-Criteria Scoring
         actions = ["RESELL", "REPAIR", "REFURBISH", "RECYCLE", "DISPOSE"]
         
-        # Find min/max for normalization
+        # Min/max normalization
         net_values = [financials[act]["net_value"] for act in actions]
         min_net = min(net_values)
         max_net = max(net_values)
@@ -36,7 +56,7 @@ class RecommendationEngine:
         max_carbon = max(carbon_avoided_values)
         carbon_range = max_carbon - min_carbon if max_carbon != min_carbon else 1.0
         
-        # Reusability scores
+        # Circularity & Reusability hierarchy score
         reusability_scores = {
             "RESELL": 1.0,
             "REPAIR": 0.8,
@@ -45,7 +65,7 @@ class RecommendationEngine:
             "DISPOSE": 0.0
         }
         
-        # Operational scores
+        # Operational feasibility score
         operational_scores = {
             "RESELL": 1.0,
             "DISPOSE": 0.9,
@@ -54,7 +74,7 @@ class RecommendationEngine:
             "REPAIR": 0.4
         }
         
-        # Get configured weights
+        # Configurable weights from settings
         w_fin = settings.WEIGHT_FINANCIAL
         w_env = settings.WEIGHT_ENVIRONMENTAL
         w_re = settings.WEIGHT_REUSABILITY
@@ -62,7 +82,6 @@ class RecommendationEngine:
         
         scored_actions = {}
         for action in actions:
-            # Check if action is prohibited
             if action in prohibited_actions:
                 scored_actions[action] = {
                     "financial_score": 0.0,
@@ -74,7 +93,6 @@ class RecommendationEngine:
                 }
                 continue
                 
-            # Normalize
             fin_val = financials[action]["net_value"]
             fin_score = (fin_val - min_net) / net_range
             
@@ -97,52 +115,48 @@ class RecommendationEngine:
                 "prohibited": False
             }
             
-        # 5. Run ML Model Prediction for alignment/confidence validation
+        # 5. ML Model Alignment Check
         ml_action, ml_confidence = MLService.predict(container_data, inspection_data)
         ml_action_upper = ml_action.upper()
         
-        # 6. Select recommended action
-        # Exclude prohibited actions and pick highest final_score
+        # 6. Select highest scored allowed action
         allowed_scores = {act: scored_actions[act]["final_score"] for act in actions if not scored_actions[act]["prohibited"]}
         
         if not allowed_scores:
-            # If all are prohibited (extreme corner case), default to DISPOSE as safest action
             recommended_action = "DISPOSE"
             recommendation_score = 0.0
         else:
             recommended_action = max(allowed_scores, key=allowed_scores.get)
             recommendation_score = allowed_scores[recommended_action]
             
-        # Completeness override
+        # Check completeness threshold
         completeness = inspection_data.get("inspection_completeness", 1.0)
-        if completeness < 0.8:
+        if completeness is not None and float(completeness) < 0.8:
             recommended_action = "MANUAL_REVIEW"
             recommendation_score = 0.0
             
-        # Determine confidence: hybrid score combining ML confidence and score margin
-        # If recommended action matches ML prediction, boost confidence, else discount it
+        # Hybrid confidence calculation
         if ml_action_upper == recommended_action:
-            confidence = round(0.7 * ml_confidence + 0.3 * recommendation_score, 2)
+            confidence = round(0.7 * ml_confidence + 0.3 * max(0.0, recommendation_score), 2)
         else:
             confidence = round(0.5 * ml_confidence, 2)
             
         if recommended_action == "MANUAL_REVIEW":
             confidence = 0.0
             
-        # Ensure confidence is within [0.0, 1.0]
         confidence = float(max(0.0, min(1.0, confidence)))
         
-        # 7. Formulate explanations and reasons
+        # 7. Generate Explainable Evidence
         fin_reason = (
             f"Expected Net Value: ₹{financials.get(recommended_action, {}).get('net_value', 0.0):.2f}. "
             f"Processing Cost: ₹{financials.get(recommended_action, {}).get('processing_cost', 0.0):.2f}."
         )
         env_reason = (
-            f"Carbon Avoided: {environmentals.get(recommended_action, {}).get('carbon_avoided_kg', 0.0):.2f} kg. "
-            f"Waste Avoided: {environmentals.get(recommended_action, {}).get('waste_avoided_kg', 0.0):.2f} kg."
+            f"Carbon Avoided: {environmentals.get(recommended_action, {}).get('carbon_avoided_kg', 0.0):.2f} kg CO2e. "
+            f"Waste Diverted: {environmentals.get(recommended_action, {}).get('waste_avoided_kg', 0.0):.2f} kg."
         )
         
-        safety_reason = "No critical safety triggers."
+        safety_reason = "Safety gates cleared. No critical structural or contamination risks."
         triggered_rules_names = []
         for r in rule_results:
             if r.is_triggered:
@@ -150,12 +164,11 @@ class RecommendationEngine:
                 if r.severity == "CRITICAL":
                     safety_reason = r.explanation
                     
-        # Check human confirmation triggers
         requires_human = RuleEngine.requires_human_confirmation(inspection_data, rule_results, recommended_action)
         if confidence < 0.6 and recommended_action != "MANUAL_REVIEW":
             requires_human = True
             
-        # Alternative actions (sorted descending by score)
+        # Alternative action rankings
         alternatives = []
         for act in actions:
             if act != recommended_action and not scored_actions[act]["prohibited"]:
@@ -166,7 +179,6 @@ class RecommendationEngine:
                 })
         alternatives.sort(key=lambda x: x["score"], reverse=True)
         
-        # Compile evidence evidence JSON
         evidence = {
             "financial_breakdown": financials,
             "environmental_breakdown": environmentals,
